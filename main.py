@@ -1,35 +1,44 @@
+import json
+from pprint import pprint
+
 from telegram import Update
-from telegram.ext import Updater, ApplicationBuilder, ContextTypes, CommandHandler
+from telegram.ext import (ApplicationBuilder, CommandHandler, ContextTypes,
+                          Updater)
 
 TOKEN = '7977384112:AAHuuTeQe2S8yz3IbPq7Mt6BVpc8LB5w27w'
-MESSAGE_FILE = 'message.txt'
+MESSAGE_FILE = '/tmp/test.txt'
+REMOTE_FILE = '/tmp/remotefile.json'
 
 import logging
 from logging import Logger
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(
-        chat_id = update.effective_chat.id,
-        text = 'Você sabia que o Lucas ama a Mari? Pois é menina...'
-    )
-
-async def add(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def recado(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
+        with open(MESSAGE_FILE, 'w') as file:
+            print("INFO: clearing message file.")
+
         with open(MESSAGE_FILE, 'a') as file:
             text = ' '.join(context.args)
             await update.message.reply_text(f'Sua mensagem: {text}')
             file.write(text + '\n')
+         
+        # with open(REMOTE_FILE, 'w') as remotefile:
+        #     text = ' '.join(context.args)
+        #     await update.message.reply_text(f'Sua mensagem: {text}')
+        #     x = {'anytime' : text}
+        #     remotefile.write(json.dumps(x))
+
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
     handlers = {
-        'start': CommandHandler('start', start),
-        'add': CommandHandler('add', add)
+        'recado': CommandHandler('recado', recado)
     }
 
     for (k, v) in handlers.items():
@@ -39,4 +48,4 @@ def main():
     app.run_polling()
 
 if __name__ == '__main__':
-    main()
+    main() 
