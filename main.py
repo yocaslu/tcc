@@ -11,7 +11,6 @@ from telegram.ext import (ApplicationBuilder, CommandHandler, ContextTypes,
 from server import REMOTE_CONTROL_API_KEY
 
 BOT_TOKEN = '7977384112:AAHuuTeQe2S8yz3IbPq7Mt6BVpc8LB5w27w'
-CUSTOM_MESSAGE_URL = 'http://localhost:8080/custom-message'
 REMOTE_CONTROL_API_KEY = 'aa13c710bab642ca843ef59595d6341b'
 CUSTOM_TEXT_URL = 'http://localhost:8080/api/notification/CUSTOMTEXT_UPDATE'
 
@@ -19,7 +18,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
-
 
 async def recado(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
@@ -32,21 +30,6 @@ async def recado(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text('Seu recado foi enviado ao MagicMirror!')
         except requests.RequestException as e:
             await update.message.reply_text(f'Falha ao enviar seu recado: {e}')
-
-           
-#           USING CUSTOM-MESSAGE
-# async def recado(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     if context.args:
-#         message = {
-#             "messageHeader" : "Novo recado: ",
-#             "message" : ' '.join(context.args)
-#         }
-
-#         try:
-#             requests.post(MAGICMIRROR_URL, json=message)
-#             await update.message.reply_text('Seu recado foi entrege ao MagicMirror!')
-#         except requests.RequestException as e:
-#             await update.message.reply_text(f'Não foi possivel enviar seu recado!: {e}')
 
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
