@@ -1,0 +1,52 @@
+/* ===== CustomText styled like Compliments ===== */
+.module.MMM-CustomText {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 20px 30px !important;
+}
+
+/* Card-style background (optional, remove if you want pure text) */
+.module.MMM-CustomText .text,
+.module.MMM-CustomText .module-content {
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 14px;
+  padding: 18px 26px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+}
+
+/* Main text style, mimicking Compliments */
+.module.MMM-CustomText .text,
+.module.MMM-CustomText .module-content span,
+.module.MMM-CustomText .module-content div {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  font-size: 4.6vw;
+  line-height: 1.15;
+  color: rgba(255,255,255,0.76);
+  text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  letter-spacing: 0.03em;
+  white-space: normal !important;
+  word-break: break-word;
+  animation: complimentIn 700ms ease-out;
+}
+
+/* Optional smaller subtext (if used) */
+.module.MMM-CustomText .small {
+  display: block;
+  font-size: 1.8vw;
+  opacity: 0.8;
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+/* Animation (same as Compliments) */
+@keyframes complimentIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  60% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
