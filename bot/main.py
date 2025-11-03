@@ -1,48 +1,19 @@
-import json
-import logging
 from logging import Logger
 from pprint import pprint
 
-import requests
-from telegram import Update
-from telegram.ext import (ApplicationBuilder, CommandHandler, ContextTypes,
-                          Updater)
+from telegram.ext import CommandHandler, CallbackQueryHandler
+from modules.bot import run_bot, APP
+from modules.menus import button_callback, main_menu
 
-from server import REMOTE_CONTROL_API_KEY
-
-BOT_TOKEN = '7977384112:AAHuuTeQe2S8yz3IbPq7Mt6BVpc8LB5w27w'
-REMOTE_CONTROL_API_KEY = 'aa13c710bab642ca843ef59595d6341b'
-CUSTOM_TEXT_URL = 'http://localhost:8080/api/notification/CUSTOMTEXT_UPDATE'
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-
-async def recado(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if context.args:
-        header = {'Authorization': f"Bearer {REMOTE_CONTROL_API_KEY}", 'Content-type': 'application/json'}
-        json = {"message": " ".join(context.args)}
-
-        try:
-            x = requests.post(CUSTOM_TEXT_URL, json=json, headers=header)
-            pprint(f'POST REQUEST RESPONSE: {x.__dict__}')
-            await update.message.reply_text('Seu recado foi enviado ao MagicMirror!')
-        except requests.RequestException as e:
-            await update.message.reply_text(f'Falha ao enviar seu recado: {e}')
 
 def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    handlers = {
-        'recado': CommandHandler('recado', recado)
-    }
+    # endereça as funções responsáveis pela funcionalidade dos commandos
+    APP.add_handler(CommandHandler('menu', main_menu))
+    APP.add_handler(CallbackQueryHandler(button_callback))
 
-    for (k, v) in handlers.items():
-        logging.info(f'Adding {k} handler...')
-        app.add_handler(v)
-
-    app.run_polling()
-
+    # inicia o bot
+    run_bot()
+    
 if __name__ == '__main__':
     main() 
