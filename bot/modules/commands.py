@@ -1,28 +1,70 @@
 from pprint import pprint
-
 from telegram import Update
 from telegram.ext import ContextTypes
+from modules.bot import MIRROR_URL, CUSTOM_TEXT_URL, REMOTE_CONTROL_API_KEY
+from requests import get, post, RequestException
 
-from modules.bot import CUSTOM_TEXT_URL, REMOTE_CONTROL_API_KEY
+async def post_request(url:str, headers: dict, json: dict = {}) -> dict:
+    try:
+        response = post(url, headers=headers, json=json)
+        pprint(response)
+        return response
+    except RequestException as e:
+        print(f'post_request {url} error: {e}\nheaders:{headers}')
 
+async def get_request(url: str, headers: dict) -> dict:
+    try:
+        response = get(url, headers=headers)
+        pprint(response)
+        return response
+    except RequestException as e:
+        print(f'get_request {url} error: {e}\nheaders:{headers}')
 
-# função de recado
-async def send_message(
-    update: Update, context: ContextTypes.DEFAULT_TYPE, text: str
-):
-    header = {
-        "Authorization": f"Bearer {REMOTE_CONTROL_API_KEY}",
-        "Content-type": "application/json",
+async def refresh_monitor():
+    headers = {
+        'Content-type': 'application/json', 
+        'Authorization': f'Bearer {REMOTE_CONTROL_API_KEY}'
     }
 
-    json = {"message": text}
+    url = f'{MIRROR_URL}/api/refresh'
+    await get_request(url, headers)
 
-    try:
-        x = requests.post(CUSTOM_TEXT_URL, json=json, headers=header)
-        pprint(f"RECADO POST REQUEST RESPONSE: {x.__dict__}")
-        await update.message.reply_text(
-            "Seu recado foi enviado ao MagicMirror!"
-        )
-    except requests.RequestException as e:
-        pprint(f"failed to send message: {e}")
-        await update.message.reply_text(f"Falha ao enviar seu recado: {e}")
+async def set_monitor_power(on: bool):
+    headers = {
+        'Content-type': 'application/json', 
+        'Authorization': f'Bearer {REMOTE_CONTROL_API_KEY}'
+    }
+
+    url = None
+    if on:
+        url = f'{MIRROR_URL}/api/monitor/on'
+    else:
+        url = f'{MIRROR_URL}/api/monitor/off'
+    await post_request(url, headers) 
+
+async def get_monitor_status() -> bool:
+    headers = {
+        'Content-type': 'application/json', 
+        'Authorization': f'Bearer {REMOTE_CONTROL_API_KEY}'
+    }
+
+    url = f'{MIRROR_URL}/api/monitor/status'
+    response = await get_request(url, headers)
+
+async def set_brightness(level: int):
+    headers = {
+        'Content-type': 'application/json', 
+        'Authorization': f'Bearer {REMOTE_CONTROL_API_KEY}'
+    }
+
+    url = f'{MIRROR_URL}/api/brightness/{level}'
+    await get_request(url, headers)
+
+# função de recado
+async def send_message(text: str):
+    headers = {
+        'Content-type': 'application/json', 
+        'Authorization': f'Bearer {REMOTE_CONTROL_API_KEY}'
+    }
+    
+    await post_request(CUSTOM_TEXT_URL, headers, {'message':text})
