@@ -85,7 +85,7 @@ let config = {
 			module: 'MMM-CustomText',
 			position: 'lower_third',
 			config: {
-				initialMessage: "I posted my first message!",
+				initialMessage: "",
 				animationSpeed: 1000 * 2,
 			},
 		},
