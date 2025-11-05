@@ -12,6 +12,7 @@ BOT_TOKEN = "7977384112:AAHuuTeQe2S8yz3IbPq7Mt6BVpc8LB5w27w"
 REMOTE_CONTROL_API_KEY = "aa13c710bab642ca843ef59595d6341b"
 CUSTOM_TEXT_URL = "http://localhost:8080/api/notification/CUSTOMTEXT_UPDATE"
 APP = ApplicationBuilder().token(BOT_TOKEN).build()
+MIRROR_URL = "http://localhost:8080"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
